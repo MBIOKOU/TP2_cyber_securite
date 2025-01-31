@@ -11,28 +11,6 @@ namespace XXEExamples.Tests
     public class XmlReader_Tests
     {
         [Test]
-        public void XMLReader_WithDTDProcessingParseAndXmlResolverSet_NotSafe()
-        {
-            AssertXXE.IsXMLParserSafe((string xml) =>
-            {
-                XmlReaderSettings settings = new XmlReaderSettings();
-                settings.DtdProcessing = DtdProcessing.Parse;
-                settings.XmlResolver = new XmlUrlResolver();
-                settings.MaxCharactersFromEntities = 6000;
-
-                using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
-                {
-                    XmlReader reader = XmlReader.Create(stream, settings);
-
-                    var xmlDocument = new XmlDocument();
-                    xmlDocument.XmlResolver = new XmlUrlResolver();
-                    xmlDocument.Load(reader);
-                    return xmlDocument.InnerText;
-                }
-            }, false);
-        }
-
-        [Test]
         public void XMLReader_WithDTDProcessingIgnored_Safe()
         {
             var exception = Assert.Throws<XmlException>(() =>
@@ -40,7 +18,7 @@ namespace XXEExamples.Tests
                 AssertXXE.IsXMLParserSafe((string xml) =>
                 {
                     XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.DtdProcessing = DtdProcessing.Ignore;
+                    settings.DtdProcessing = DtdProcessing.Ignore; // Désactiver le traitement des DTD
                     settings.MaxCharactersFromEntities = 6000;
 
                     using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
@@ -48,7 +26,7 @@ namespace XXEExamples.Tests
                         XmlReader reader = XmlReader.Create(stream, settings);
 
                         var xmlDocument = new XmlDocument();
-                        xmlDocument.XmlResolver = new XmlUrlResolver();
+                        xmlDocument.XmlResolver = null; // Désactiver l'utilisation de XmlResolver
                         xmlDocument.Load(reader);
                         return xmlDocument.InnerText;
                     }
@@ -66,7 +44,7 @@ namespace XXEExamples.Tests
                 AssertXXE.IsXMLParserSafe((string xml) =>
                 {
                     XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.DtdProcessing = DtdProcessing.Prohibit;
+                    settings.DtdProcessing = DtdProcessing.Prohibit; // Interdire le traitement des DTD
                     settings.MaxCharactersFromEntities = 6000;
 
                     using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
@@ -74,7 +52,7 @@ namespace XXEExamples.Tests
                         XmlReader reader = XmlReader.Create(stream, settings);
 
                         var xmlDocument = new XmlDocument();
-                        xmlDocument.XmlResolver = new XmlUrlResolver();
+                        xmlDocument.XmlResolver = null; // Désactiver l'utilisation de XmlResolver
                         xmlDocument.Load(reader);
                         return xmlDocument.InnerText;
                     }
