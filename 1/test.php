@@ -10,7 +10,7 @@ libxml_disable_entity_loader(true);
 $xml = strlen($_GET['xml']) > 0 ? $_GET['xml'] : '<root><content>No XML found</content></root>';
 
 $document = new DOMDocument();
-$document->loadXML($xml, LIBXML_NOENT);
+$document->loadXML($xml, LIBXML_NOENT | LIBXML_DTDLOAD | LIBXML_NOCDATA);
 $parsedDocument = simplexml_import_dom($document);
 
 echo htmlspecialchars($parsedDocument->content, ENT_QUOTES, 'UTF-8');
