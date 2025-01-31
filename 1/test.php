@@ -13,7 +13,7 @@ $document = new DOMDocument();
 //1
 $document->xmlStandalone = true;
 
-$document->loadXML($xml, LIBXML_NOENT | LIBXML_NOCDATA | LIBXML_NONET);
+$document-> localXML($xml,LIBXML_NOENT);
 // Désactiver les DTD de manière explicite
 if ($document->doctype) {
     $document->doctype->removeChild($document->doctype);
