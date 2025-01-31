@@ -4,14 +4,15 @@ require_once('../_helpers/strip.php');
 
 // https://depthsecurity.com/blog/exploitation-xml-external-entity-xxe-injection
 
-libxml_disable_entity_loader(false); // Désactiver le chargement des entités externes
+// Désactiver le chargement d'entités externes
+libxml_disable_entity_loader(true);
+
 $xml = strlen($_GET['xml']) > 0 ? $_GET['xml'] : '<root><content>No XML found</content></root>';
 
 $document = new DOMDocument();
-$document->loadXML($xml, LIBXML_NOENT | LIBXML_DTDLOAD); // N'utilisez jamais LIBXML_DTDLOAD
+$document->loadXML($xml, LIBXML_NOENT);
 $parsedDocument = simplexml_import_dom($document);
-$user = $creds->user;
-$pass = $creds->pass;
-echo htmlspecialchars($parsedDocument->content, ENT_QUOTES, 'UTF-8'); // Sanitize output
+
+echo htmlspecialchars($parsedDocument->content, ENT_QUOTES, 'UTF-8');
 
 ?>
